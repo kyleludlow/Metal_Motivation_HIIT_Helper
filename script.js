@@ -22,22 +22,26 @@ function mainTimer(seconds, round = 30, cooldowns = 15) {
   }, 1000);
 }
 
-function timer(seconds, audio = 'roundStart') {
+function timer(seconds, type = 'roundStart', cooldown = false) {
   clearInterval(countdown);
 
   const now = Date.now();
   const then = now + seconds * 1000;
 
-  playAudio(audio);
+  playAudio(type);
   countdown = setInterval(() => {
     const secondsLeft = Math.round((then - Date.now()) / 1000);
 
-    console.log(secondsLeft);
+    console.log(cooldown);
 
     if (secondsLeft < 0) {
       stopAudio();
       clearInterval(countdown);
-      coolDown();
+      if (!cooldown) {
+        coolDown();
+      } else {
+        roundStart();
+      }
       return;
     }
 
@@ -47,7 +51,11 @@ function timer(seconds, audio = 'roundStart') {
 
 
 function coolDown(seconds = 15) {
-  timer(seconds, 'cooldown');
+  timer(seconds, 'cooldown', true);
+}
+
+function roundStart(seconds = 30) {
+  timer(seconds, 'roundStart');
 }
 
 function displayTimeLeft(seconds, type) {
